@@ -1,25 +1,7 @@
-name: Build Geode Mod
+cmake_minimum_required(VERSION 3.20)
+project(gdsa_ranked)
 
-on:
-  push:
-  pull_request:
-  workflow_dispatch:
+find_package(Geode REQUIRED)
 
-jobs:
-  build:
-    name: Build (${{ matrix.target }})
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        target: [Windows, Android32, Android64]
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-
-      - name: Build Mod
-        uses: geode-sdk/build-geode-mod@main
-        with:
-          target: ${{ matrix.target }}
+setup_geode_mod(${PROJECT_NAME})
+target_sources(${PROJECT_NAME} PRIVATE src/main.cpp)
