@@ -22,12 +22,6 @@ jobs:
           - name: Android 64-bit
             os: ubuntu-latest
             target: Android64
-          - name: macOS
-            os: macos-latest
-            target: MacOS
-          - name: iOS
-            os: macos-latest
-            target: iOS
 
     steps:
       - uses: actions/checkout@v4
