@@ -4,18 +4,15 @@
 
 using namespace geode::prelude;
 
-// Hook 1: Tambah RP saat tamat level
 class $modify(GDSAPlayLayer, PlayLayer) {
     void levelComplete() {
         PlayLayer::levelComplete();
-
         if (this->m_isPracticeMode) return;
 
         auto level = this->m_level;
         if (level && level->m_stars > 0) {
             int stars = level->m_stars;
             int currentRP = Mod::get()->getSavedValue<int>("player_points", 0);
-            
             int earnedRP = stars * 15;
             Mod::get()->setSavedValue<int>("player_points", currentRP + earnedRP);
 
@@ -25,7 +22,6 @@ class $modify(GDSAPlayLayer, PlayLayer) {
     }
 };
 
-// Hook 2: Tombol Cek Rank di Main Menu
 class $modify(GDSAMenuLayer, MenuLayer) {
     bool init() {
         if (!MenuLayer::init()) return false;
@@ -40,7 +36,6 @@ class $modify(GDSAMenuLayer, MenuLayer) {
             auto rankBtn = CCMenuItemSpriteExtra::create(
                 btnSpr, this, menu_selector(GDSAMenuLayer::onGDSARankedBtn)
             );
-            
             rankBtn->setID("gdsa-ranked-btn");
             menu->addChild(rankBtn);
             menu->updateLayout();
