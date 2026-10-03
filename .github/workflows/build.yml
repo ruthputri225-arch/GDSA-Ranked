@@ -12,12 +12,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [Android32, Android64]
+        target: [Android32, Android64, Win64]
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Build Mod
-        uses: geode-sdk/build-geode-mod@main
+        uses: geode-sdk/build-geode-mod@v2
         with:
           target: ${{ matrix.target }}
