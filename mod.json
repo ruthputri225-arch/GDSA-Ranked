@@ -1,13 +1,13 @@
 {
-  "geode": "v3.0.0",
+  "geode": "3.0.0",
   "gd": {
     "win": "2.206",
     "android": "2.206",
     "mac": "2.206"
   },
-  "id": "com.developer.gdsa_ranked",
+  "id": "gdsa.ranked",
   "name": "GDSA Ranked",
   "version": "v1.0.0",
   "developer": "Developer",
-  "description": "Ranked Unofficial Geometry Dash."
+  "description": "System ranked Geometry Dash berdasarkan attempt."
 }
