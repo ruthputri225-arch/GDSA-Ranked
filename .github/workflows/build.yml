@@ -1,15 +1,22 @@
 name: Build Geode Mod
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
 
 jobs:
   build:
-    name: Build Android
+    name: Build Mod
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [Android32, Android64]
 
     steps:
       - uses: actions/checkout@v4
 
-      - uses: geode-sdk/build-geode-mod@main
+      - name: Build
+        uses: geode-sdk/build-geode-mod@main
         with:
-          target: Android
+          target: ${{ matrix.target }}
