@@ -1,0 +1,13 @@
+{
+  "geode": "2.0.0",
+  "gd": {
+    "win": "2.206",
+    "android": "2.206",
+    "mac": "2.206"
+  },
+  "id": "com.developer.gdsa_ranked",
+  "name": "GDSA Ranked",
+  "version": "v1.0.0",
+  "developer": "Developer",
+  "description": "System ranked Geometry Dash berdasarkan attempt dengan rotasi season 2 bulan sekali."
+}
