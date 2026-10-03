@@ -1,18 +1,25 @@
-cmake_minimum_required(VERSION 3.20)
-project(gdsa_ranked LANGUAGES C CXX)
+name: Build Geode Mod
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
 
-# Memaksa CMake membaca jalur SDK dari GitHub Actions secara mutlak
-if(DEFINED ENV{GEODE_SDK})
-    set(Geode_DIR "$ENV{GEODE_SDK}")
-message(STATUS "Geode SDK found at: $ENV{GEODE_SDK}")
-else()
-    message(FATAL_ERROR "GEODE_SDK environment variable is not set!")
-endif()
+jobs:
+  build:
+    name: Build (${{ matrix.target }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [Windows, Android32, Android64]
 
-find_package(Geode REQUIRED)
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
-setup_geode_mod(${PROJECT_NAME})
-target_sources(${PROJECT_NAME} PRIVATE src/main.cpp)
+      - name: Build Mod
+        uses: geode-sdk/build-geode-mod@main
+        with:
+          target: ${{ matrix.target }}
