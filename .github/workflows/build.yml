@@ -4,19 +4,12 @@ on: [push, pull_request]
 
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-        - name: Android
-          os: ubuntu-latest
-          target: Android
-
-    runs-on: ${{ matrix.config.os }}
+    name: Build Android
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
       - uses: geode-sdk/build-geode-mod@main
         with:
-          target: ${{ matrix.config.target }}
+          target: Android
