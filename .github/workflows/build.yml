@@ -7,17 +7,4 @@ on:
 
 jobs:
   build:
-    name: Build (${{ matrix.target }})
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        target: [Android32, Android64, Win64]
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Build Mod
-        uses: geode-sdk/build-geode-mod@main
-        with:
-          target: ${{ matrix.target }}
+    uses: geode-sdk/Geode/.github/workflows/build_mod.yml@main
