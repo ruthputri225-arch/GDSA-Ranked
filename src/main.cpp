@@ -4,7 +4,7 @@
 
 using namespace geode::prelude;
 
-// Tambah RP otomatis saat level selesai
+// Hook 1: Tambah RP saat tamat level
 class $modify(GDSAPlayLayer, PlayLayer) {
     void levelComplete() {
         PlayLayer::levelComplete();
@@ -15,6 +15,7 @@ class $modify(GDSAPlayLayer, PlayLayer) {
         if (level && level->m_stars > 0) {
             int stars = level->m_stars;
             int currentRP = Mod::get()->getSavedValue<int>("player_points", 0);
+            
             int earnedRP = stars * 15;
             Mod::get()->setSavedValue<int>("player_points", currentRP + earnedRP);
 
@@ -24,22 +25,23 @@ class $modify(GDSAPlayLayer, PlayLayer) {
     }
 };
 
-// Tombol Cek RP di Menu Utama
+// Hook 2: Tombol Cek Rank di Main Menu
 class $modify(GDSAMenuLayer, MenuLayer) {
     bool init() {
         if (!MenuLayer::init()) return false;
 
-        auto btnSpr = CCSprite::createWithSpriteFrameName("GJ_timeBtn_001.png");
-        if (!btnSpr) {
-            btnSpr = CCSprite::create();
-        }
-
-        auto rankBtn = CCMenuItemSpriteExtra::create(
-            btnSpr, this, menu_selector(GDSAMenuLayer::onGDSARankedBtn)
-        );
-
         auto menu = this->getChildByID("right-side-menu");
         if (menu) {
+            auto btnSpr = CCSprite::createWithSpriteFrameName("GJ_timeBtn_001.png");
+            if (!btnSpr) {
+                btnSpr = CCSprite::create();
+            }
+
+            auto rankBtn = CCMenuItemSpriteExtra::create(
+                btnSpr, this, menu_selector(GDSAMenuLayer::onGDSARankedBtn)
+            );
+            
+            rankBtn->setID("gdsa-ranked-btn");
             menu->addChild(rankBtn);
             menu->updateLayout();
         }
@@ -51,13 +53,13 @@ class $modify(GDSAMenuLayer, MenuLayer) {
         int pts = Mod::get()->getSavedValue<int>("player_points", 0);
         
         std::string rankStr = "Easy";
-        if (pts > 100) rankStr = "Medium";
-        if (pts > 500) rankStr = "Hard";
-        if (pts > 1200) rankStr = "Insane";
-        if (pts > 3000) rankStr = "Hard Demon";
-        if (pts > 6000) rankStr = "Extreme Demon";
+        if (pts >= 100) rankStr = "Medium";
+        if (pts >= 500) rankStr = "Hard";
+        if (pts >= 1200) rankStr = "Insane";
+        if (pts >= 3000) rankStr = "Hard Demon";
+        if (pts >= 6000) rankStr = "Extreme Demon";
 
-        std::string content = "Rank: " + rankStr + " | Total: " + std::to_string(pts) + " RP";
-        Notification::create(content, NotificationIcon::Info)->show();
+        std::string content = "Rank: " + rankStr + "\nTotal: " + std::to_string(pts) + " RP";
+        FLAlertLayer::create("GDSA Ranked", content.c_str(), "OK")->show();
     }
 };
