@@ -3,20 +3,36 @@ name: Build Geode Mod
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 jobs:
   build:
-    name: Build Mod
-    runs-on: ubuntu-latest
+    name: Build ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
     strategy:
       fail-fast: false
       matrix:
-        target: [Android32, Android64]
+        config:
+          - name: Windows 64-bit
+            os: windows-latest
+            target: Win64
+          - name: Android 32-bit
+            os: ubuntu-latest
+            target: Android32
+          - name: Android 64-bit
+            os: ubuntu-latest
+            target: Android64
+          - name: macOS
+            os: macos-latest
+            target: MacOS
+          - name: iOS
+            os: macos-latest
+            target: iOS
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build
+      - name: Build Mod
         uses: geode-sdk/build-geode-mod@main
         with:
-          target: ${{ matrix.target }}
+          target: ${{ matrix.config.target }}
