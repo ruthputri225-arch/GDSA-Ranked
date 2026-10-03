@@ -16,10 +16,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
 
       - name: Build Mod
-        uses: geode-sdk/build-geode-mod@v2
+        uses: geode-sdk/build-geode-mod@main
         with:
           target: ${{ matrix.target }}
