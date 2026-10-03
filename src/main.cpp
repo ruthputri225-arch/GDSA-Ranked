@@ -4,7 +4,7 @@
 
 using namespace geode::prelude;
 
-// Hook PlayLayer: Tambah RP saat tamat level
+// Tambah RP otomatis saat level selesai
 class $modify(GDSAPlayLayer, PlayLayer) {
     void levelComplete() {
         PlayLayer::levelComplete();
@@ -14,11 +14,8 @@ class $modify(GDSAPlayLayer, PlayLayer) {
         auto level = this->m_level;
         if (level && level->m_stars > 0) {
             int stars = level->m_stars;
-            int attempts = this->m_attempts > 0 ? this->m_attempts : 1;
-            
-            // Hitung poin sederhana
-            int earnedRP = stars * 15;
             int currentRP = Mod::get()->getSavedValue<int>("player_points", 0);
+            int earnedRP = stars * 15;
             Mod::get()->setSavedValue<int>("player_points", currentRP + earnedRP);
 
             std::string msg = "GDSA Ranked: +" + std::to_string(earnedRP) + " RP!";
@@ -27,14 +24,15 @@ class $modify(GDSAPlayLayer, PlayLayer) {
     }
 };
 
-// Hook MenuLayer: Tombol & Popup Rank di Main Menu
+// Tombol Cek RP di Menu Utama
 class $modify(GDSAMenuLayer, MenuLayer) {
     bool init() {
         if (!MenuLayer::init()) return false;
 
-        auto btnSpr = CircleButtonSprite::createWithSpriteFrameName(
-            "GJ_timeBtn_001.png", 1.0f, CircleBaseColor::Green, CircleBaseSize::Medium
-        );
+        auto btnSpr = CCSprite::createWithSpriteFrameName("GJ_timeBtn_001.png");
+        if (!btnSpr) {
+            btnSpr = CCSprite::create();
+        }
 
         auto rankBtn = CCMenuItemSpriteExtra::create(
             btnSpr, this, menu_selector(GDSAMenuLayer::onGDSARankedBtn)
@@ -59,9 +57,7 @@ class $modify(GDSAMenuLayer, MenuLayer) {
         if (pts > 3000) rankStr = "Hard Demon";
         if (pts > 6000) rankStr = "Extreme Demon";
 
-        std::string content = "Rank: " + rankStr + "\nPoints: " + std::to_string(pts) + " RP";
-        
-        // Popup resmi bawaan Geode (anti-crash)
-        FLAlertLayer::create("GDSA Ranked", content, "OK")->show();
+        std::string content = "Rank: " + rankStr + " | Total: " + std::to_string(pts) + " RP";
+        Notification::create(content, NotificationIcon::Info)->show();
     }
 };
